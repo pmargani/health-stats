@@ -1,8 +1,10 @@
 import sys
 import csv
+import argparse
 from datetime import datetime
 
 import matplotlib.pylab as plt 
+
 
 BLANK = ''
 
@@ -69,6 +71,7 @@ def basicPlot(dts, data, title, ylabel):
     plt.xlabel("datetime")
     plt.ylabel(ylabel)
     plt.title("%s (Mean=%5.2f)" % (title, meanData(data)))
+    plt.savefig("%s.png" % title)
     plt.show()
 
 def meanData(xs):
@@ -110,6 +113,8 @@ def binSugars(dts, sugars):
     axs[1].set_xlabel("Hour of Day")
     axs[1].set_ylabel("Mean Blood Sugar")
 
+    plt.savefig("sugarsByHour.png")
+
     plt.show()
 
 def plotData(fn, year):
@@ -136,9 +141,17 @@ def plotData(fn, year):
     binSugars(dts, sugars)
 
 def main():
-    fn = sys.argv[1]
-    year = sys.argv[2]
-    plotData(fn, year)
+    
+    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser.add_argument('CSV', metavar='csvFile', type=str,
+                    help='a CSV file containing health data')
+    parser.add_argument('year', metavar='year', type=int,
+                    help='the year for this data')
+
+    args = parser.parse_args()
+
+    print(args, args.CSV)
+    plotData(args.CSV, args.year)
 
 if __name__ == '__main__':
     main()
